@@ -29,7 +29,7 @@ fn rocket() -> rocket::Rocket {
 // }
 
 fn main() {
-    let allowed_origins = AllowedOrigins::some_exact(&["https://nicodex-angular.vercel.app/"]);
+    let allowed_origins = AllowedOrigins::some_exact(&["https://nicodex-angular.vercel.app/","http://nicodex-angular.vercel.app/"],);
 
     // Create CORS options
     let cors: CorsOptions = CorsOptions {
