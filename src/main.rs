@@ -7,6 +7,23 @@ use rocket::response::NamedFile;
 use std::path::{Path, PathBuf};
 use rocket_cors::{Cors, AllowedOrigins,CorsOptions,AllowedHeaders,AllowedMethods,AllOrSome};
 use rocket::ignite;
+// use rocket_contrib::json::Json;
+// use rocket_contrib::json;
+// use rocket::response::content::Json;
+// use rocket::http::hyper::Response;
+use serde_json::json;
+
+#[get("/hello")]
+fn makehello() -> rocket::response::content::Json<String> {
+    let user = serde_json::json!({
+        "name": "Jon Snow".to_string(),
+        "age": 21,
+        "alive": true,
+    });
+    
+    let json_string = serde_json::to_string(&user).unwrap();
+    rocket::response::content::Json(json_string)
+}
 
 
 #[get("/play/<file_name>")]
@@ -20,13 +37,20 @@ fn play(file_name: String) -> Option<NamedFile> {
    return NamedFile::open(path).ok()
 }
 
-fn rocket() -> rocket::Rocket {
-    rocket::ignite().mount("/", routes![play])
-}
-
-// fn main() {
-//     rocket().launch();
+// fn rocket() -> rocket::Rocket {
+//     rocket::ignite().mount("/", routes![play])
 // }
+
+// // fn main() {
+// //     rocket().launch();
+// // }
+
+// #[get("/hello")]
+// fn makehello() -> Json<&'static str> {
+//     return Json("Hello, world!");
+//     // return Json(Response{message : "Hello, world!"})
+// }
+
 
 fn main() {
     let allowed_origins = AllowedOrigins::some_exact(&["https://nicodex-angular.vercel.app/","http://nicodex-angular.vercel.app/"],);
@@ -50,5 +74,6 @@ fn main() {
     rocket::ignite()
     .attach(cors.to_cors().unwrap())
     .mount("/", routes![play])
+    .mount("/", routes![makehello])
     .launch();
 }
